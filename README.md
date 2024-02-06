@@ -30,7 +30,7 @@ Welcome to the Weather & Calendar Integration Portfolio Project! This project co
 
 To run this project locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/weather-calendar-integration.git`
+1. Clone the repository: `git clone https://github.com/addymwenda12/weather-calendar-integration.git`
 2. Open the `index.html` file in your preferred web browser.
 
 ## Technologies Used
@@ -38,6 +38,8 @@ To run this project locally, follow these steps:
 - HTML
 - CSS
 - JavaScript
+- Flask
+- MySQL
 
 
 ## Demo
