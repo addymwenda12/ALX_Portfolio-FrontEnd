@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+			font-family: Arial, sans-serif;
+			line-height: 1.6;
+			background-color: #f0f0f0;
+			padding: 2rem;
+		}
+
+		h1 {
+			font-size: 2.5rem;
+			margin-bottom: 1.5rem;
+			color: #3f3f3f;
+		}
+
+		#weather-data {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		#weather-data p {
+			font-size: 1.2rem;
+			flex-basis: calc(33% - 1rem);
+		}
+
+		#weather-data img {
+			width: 100%;
+			height: auto;
+		}
+    </style>
+</head>
+<body>
+    <h1>Current Weather Conditions</h1>
+    <div id="weather-data"></div>
+
+    <script>
+        // Fetch weather data from Flask API
+        async function fetchWeatherData(lat, lon) {
+            const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
+            const data = await response.json();
+            return data;
+        }
+
+        // Display weather data on the page
+        function displayWeatherData(data) {
+            const weatherDataDiv = document.getElementById('weather-data');
+
+            const temp = document.createElement('p');
+            temp.textContent = `Temperature: ${data.current.temp} K`;
+            weatherDataDiv.appendChild(temp);
+
+            const humidity = document.createElement('p');
+            humidity.textContent = `Humidity: ${data.current.humidity}%`;
+            weatherDataDiv.appendChild(humidity);
+
+            const windSpeed = document.createElement('p');
+            windSpeed.textContent = `Wind Speed: ${data.current.wind_speed} m/s`;
+            weatherDataDiv.appendChild(windSpeed);
+
+            const weatherIcon = document.createElement('img');
+            weatherIcon.src = `http://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`;
+            weatherDataDiv.appendChild(weatherIcon);
+        }
+
+        // Get latitude and longitude values from user input or other sources
+        const lat = -0.023559;
+        const lon = 37.906193;
+
+        // Fetch and display weather data
+        fetchWeatherData(lat, lon).then(data => displayWeatherData(data));
+    </script>
+</body>
+</html>
