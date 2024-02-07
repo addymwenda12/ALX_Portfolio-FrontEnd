@@ -1,136 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://kit.fontawesome.com/ccbd4d6bc1.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <title>Weather App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f0f0f0;
-            padding: 2rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: #3f3f3f;
-        }
-
-        #weather-data {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        #weather-data p {
-            font-size: 1.2rem;
-            flex-basis: calc(33% - 1rem);
-        }
-
-        #weather-data img {
-            width: 50px; /* Adjust the size of the weather icon as needed */
-            height: auto;
-        }
-
-        #map {
-            height: 400px; /* Adjust the height of the map as needed */
-            width: 100%;
-            margin-bottom: 1.5rem;
-        }
-
-        #city-form {
-            margin-bottom: 1.5rem;
-        }
-    </style>
 </head>
 <body>
-    <h1>Weather App</h1>
-    <form id="city-form">
-        <label for="city-input">Enter City Name:</label>
-        <input type="text" id="city-input" name="city" required>
-        <button type="submit">Get Weather</button>
-    </form>
-    <div id="weather-data"></div>
-    <div id="map"></div>
-    <script>
-        let map;
+    <div class="weather-app">
+        <div class="container">
+            <h3 class="brand">the weather</h3>
+            <div>
+                <h1 class="temp">16&#176;</h1>
+                <div class="city-time">
+                    <h1 class="name">London</h1>
+                    <small>
+                        <span class="time">06:09</span>
+                        - <span class="date">Monday Sep 19</span>
+                    </small>
+                </div>
+                <div class="weather">
+                    <img src="./icons/day/113.png" class="icon" alt="icon" width="50" height="50">
+                    <span class="condition">Cloudy</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <form id="locationInput">
+                <input type="text" class="search" placeholder="Search Location...">
+                <button type="submit" class="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 0, lng: 0 }, // Initial center of the map (lat: 0, lng: 0 represents the world map)
-                zoom: 2, // Initial zoom level of the map
-            });
-        }
+            <ul class="cities">
+                <li class="city">New York</li>
+                <li class="city">Nairobi</li>
+                <li class="city">Paris</li>
+                <li class="city">Tokyo</li>
+            </ul>
 
-        async function geocodeLocation(city) {
-            try {
-                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=AIzaSyCErwLYF92V4GOXQQ1WJ-Zk1YOQsS_msog`);
-                const data = await response.json();
-                return data.results[0].geometry.location;
-            } catch (error) {
-                console.error('Error geocoding location:', error);
-                return null;
-            }
-        }
+            <ul class="details">
+                <h4>Weather Details</h4>
+                <li>
+                    <span>Cloudy</span>
+                    <span class="cloud">89%</span>
+                </li>
+                <li>
+                    <span>Humidity</span>
+                    <span class="humidity">64%</span>
+                </li>
+                <li>
+                    <span>Wind</span>
+                    <span class="wind">8km/h</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-        async function fetchWeatherData(city) {
-            try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=78d6507e36c0f4d824cb206fface4135&units=metric`);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching weather data:', error);
-                return null;
-            }
-        }
-
-        async function displayWeatherData(event) {
-            event.preventDefault();
-            const cityInput = document.getElementById('city-input');
-            const cityName = cityInput.value.trim();
-
-            if (cityName) {
-                const weatherDataDiv = document.getElementById('weather-data');
-                weatherDataDiv.innerHTML = ''; // Clear previous weather data
-
-                try {
-                    const location = await geocodeLocation(cityName);
-                    if (location) {
-                        map.setCenter(location);
-                        map.setZoom(10); // Adjust the zoom level as needed
-
-                        const data = await fetchWeatherData(cityName);
-                        if (data) {
-                            const temp = document.createElement('p');
-                            temp.textContent = `Temperature: ${data.main.temp} °C`;
-                            weatherDataDiv.appendChild(temp);
-
-                            const humidity = document.createElement('p');
-                            humidity.textContent = `Humidity: ${data.main.humidity}%`;
-                            weatherDataDiv.appendChild(humidity);
-
-                            const windSpeed = document.createElement('p');
-                            windSpeed.textContent = `Wind Speed: ${data.wind.speed} m/s`;
-                            weatherDataDiv.appendChild(windSpeed);
-                        } else {
-                            weatherDataDiv.textContent = 'Failed to fetch weather data.';
-                        }
-                    } else {
-                        console.error('Failed to geocode location');
-                    }
-                } catch (error) {
-                    console.error('Error displaying weather data:', error);
-                }
-            }
-        }
-
-        document.getElementById('city-form').addEventListener('submit', displayWeatherData);
-    </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCErwLYF92V4GOXQQ1WJ-Zk1YOQsS_msog&callback=initMap"></script>
+    <script src="app.js"></script>
 </body>
 </html>
