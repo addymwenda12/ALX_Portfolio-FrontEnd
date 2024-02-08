@@ -60,7 +60,7 @@ form.addEventListener('submit', (e) => {
 We will use this function later*/
 function dayOfTheWeek(day, month, year) {
 	const weekday = [
-		"Sunday", 
+    "Sunday", 
     "Monday", 
     "Tuesday", 
     "Wednesday", 
